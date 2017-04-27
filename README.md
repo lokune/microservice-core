@@ -26,10 +26,12 @@ and then add:
 
 `libraryDependencies += "com.github.lokune" %% "microservice-core" % "Tag"`
 
-This will add the entire `microservice-core` to your project.
-
-If you want specific modules, the following are the modules you can add to your service:
+The following are the modules you can use in your service:
 
 * `core-database`
 
-`libraryDependencies += "com.github.lokune.microservice-core" %% "core-database" % "Tag"`
+  *  Get CRUD on postgres tables for FREE
+
+  *  KISS postgres migrations
+
+  *  Get CRUD on mongo collections for FREE
