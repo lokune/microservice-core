@@ -18,15 +18,15 @@ lazy val database =
     .settings(libraryDependencies ++= commonDependencies)
     .settings(
       libraryDependencies ++=
-        Seq("org.reactivemongo" 	        %% "reactivemongo" 	      % "0.12.1",
-	          "org.postgresql"       	       % "postgresql"           % "9.4.1212",
-            "com.typesafe.slick"  	      %% "slick"                % "3.2.0-M2",
-            "com.typesafe.slick"  	      %% "slick-hikaricp"       % "3.2.0-M2",
-            "com.github.tminglei" 	      %% "slick-pg"             % "0.15.0-M4",
-            "com.github.tminglei" 	      %% "slick-pg_spray-json"  % "0.15.0-M4"),
+        Seq("org.reactivemongo" 	        %% "reactivemongo" 	      % "0.12.5",
+	          "org.postgresql"       	       % "postgresql"           % "42.1.1",
+            "com.typesafe.slick"  	      %% "slick"                % "3.2.1",
+            "com.typesafe.slick"  	      %% "slick-hikaricp"       % "3.2.1",
+            "com.github.tminglei" 	      %% "slick-pg"             % "0.15.2",
+            "com.github.tminglei" 	      %% "slick-pg_spray-json"  % "0.15.2"),
       publishArtifact in(Compile, packageSrc) := false)
 
-scalaVersion in ThisBuild := "2.12.1"
+scalaVersion in ThisBuild := "2.12.2"
 
 scalacOptions in ThisBuild :=
   Seq(
