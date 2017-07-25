@@ -57,7 +57,6 @@ lazy val hdfs =
     .settings(libraryDependencies ++= commonDependencies)
     .settings(
       libraryDependencies ++= Seq(
-        "com.amazonaws" % "aws-java-sdk" % "1.11.166",
         "org.apache.hadoop" % "hadoop-aws" % hadoopV,
         "com.google.cloud.bigdataoss" % "gcs-connector" % "1.6.1-hadoop2",
         "org.apache.hadoop" % "hadoop-client" % hadoopV,

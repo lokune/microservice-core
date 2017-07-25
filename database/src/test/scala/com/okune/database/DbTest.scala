@@ -1,9 +1,10 @@
 package com.okune.database
 
 import java.util.concurrent.Executors
+
 import scala.concurrent.{Await, ExecutionContext, Future}
 import scala.concurrent.duration.Duration
-import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers, WordSpec}
 import reactivemongo.api.indexes.Index
 import reactivemongo.api.indexes.IndexType
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, Macros}
@@ -13,7 +14,7 @@ import com.okune.database.CorePgDriver.api._
 import com.typesafe.config.ConfigFactory
 import reactivemongo.api.collections.bson.BSONCollection
 
-class PgTest extends FunSuite with BeforeAndAfterAll {
+class PgTest extends WordSpec with Matchers with BeforeAndAfterAll {
 
   override def beforeAll(): Unit = {
     //Create database and tables
@@ -25,39 +26,43 @@ class PgTest extends FunSuite with BeforeAndAfterAll {
     Postgres.Migrations.destroy()
   }
 
-  test("save and/or retrieve data from postgres db") {
-    import Postgres._
+  "Script" should {
+    "save and/or retrieve data from postgres db" in {
+      import Postgres._
 
-    var testUserId = 0L
-    try {
-      val testUser = User(None, "laban.okune@gmail.com", "123")
-      testUserId = Await.result(Postgres.UserDao.insert(testUser), Duration.Inf)
-      assert(testUserId > 0)
+      var testUserId = 0L
+      try {
+        val testUser = User(None, "laban.okune@gmail.com", "123")
+        testUserId = Await.result(Postgres.UserDao.insert(testUser), Duration.Inf)
+        testUserId.toInt should be > 0
 
-      val existingUsers = Await.result(Postgres.UserDao.findAll(), Duration.Inf)
-      assert(existingUsers.size > 0)
+        val existingUsers = Await.result(Postgres.UserDao.findAll(), Duration.Inf)
+        existingUsers should not be empty
 
-      val savedUser = Await.result(Postgres.UserDao.findById(testUserId), Duration.Inf)
-      assert(savedUser.nonEmpty)
-    } finally {
-      //cleanup
-      if (testUserId != 0L) Await.result(Postgres.UserDao.delete(testUserId), Duration.Inf)
+        val savedUser = Await.result(Postgres.UserDao.findById(testUserId), Duration.Inf)
+        savedUser should not be empty
+      } finally {
+        //cleanup
+        if (testUserId != 0L) Await.result(Postgres.UserDao.delete(testUserId), Duration.Inf)
+      }
     }
   }
 }
 
-class MongoTest extends FunSuite {
-  test("save and/or retrieve data from mongo") {
-    import Mongo._
+class MongoTest extends WordSpec with Matchers {
+  "Script" should {
+    "save and/or retrieve data from mongo" in {
+      import Mongo._
 
-    val person = Person(BSONObjectID.generate(), "Okune", 16)
-    Await.result(Mongo.PersonDao.insert(person), Duration.Inf)
-    val storedList = Await.result(Mongo.PersonDao.findById(person._id), Duration.Inf)
-    assert(storedList.size > 0)
-    val query = BSONDocument("name" -> storedList.head.name)
+      val person = Person(BSONObjectID.generate(), "Okune", 16)
+      Await.result(Mongo.PersonDao.insert(person), Duration.Inf)
+      val storedList = Await.result(Mongo.PersonDao.findById(person._id), Duration.Inf)
+      storedList should not be empty
+      val query = BSONDocument("name" -> storedList.head.name)
 
-    //cleanup
-    Await.result(Mongo.PersonDao.collection.flatMap(_.remove(query)), Duration.Inf)
+      //cleanup
+      Await.result(Mongo.PersonDao.collection.flatMap(_.remove(query)), Duration.Inf)
+    }
   }
 }
 
@@ -125,4 +130,5 @@ object Postgres extends PostgresDb {
       migrationsRunner.dropDatabase()
     }
   }
+
 }
