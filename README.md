@@ -32,6 +32,12 @@ The following are the modules you can use in your service:
 
   *  Get CRUD on postgres tables for FREE
 
-  *  KISS postgres migrations
+  *  KISS postgres migrations with slick
 
   *  Get CRUD on mongo collections for FREE
+
+* `core-hdfs`
+
+    *  Write/read bytes to/from a HDFS-supported `URI`(HDFS, S3 and GCS)
+
+N/B: To get a deeper understanding of how any module works, look at it's tests.

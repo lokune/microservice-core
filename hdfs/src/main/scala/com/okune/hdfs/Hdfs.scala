@@ -41,11 +41,11 @@ object Hdfs {
     * [2] Add s3 server-side encryption
     * https://issues.apache.org/jira/browse/HADOOP-10568
     */
-  def configuration(root: Config = ConfigFactory.load()): Configuration = {
+  def configuration(root: Config = ConfigFactory.load(), ioBufferSize: Int = 4096): Configuration = {
     val config = root.getConfig("com.okune.hdfs")
     val conf = new Configuration()
 
-    // GC support
+    // GCS support
     conf.setBoolean("google.cloud.auth.service.account.enable", true)
     if (config.hasPath("google.cloud.auth.service.account.email")) conf.set("google.cloud.auth.service.account.email", config.getString("google.cloud.auth.service.account.email"))
     if (config.hasPath("google.cloud.auth.service.account.base64.keyfile"))
@@ -54,7 +54,7 @@ object Hdfs {
       conf.set("fs.gs.project.id", config.getString("fs.gs.project.id"))
       conf.set("fs.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem")
       conf.set("fs.AbstractFileSystem.gs.impl", "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS")
-    } // end gc support
+    } // end gcs support
 
     // S3 support
     val (awsAccessKey, awsSecretAccessKey, awsServerSideEncryptionAlgo): (String, String, String) = ("fs.s3a.access.key", "fs.s3a.secret.key", "fs.s3a.server-side-encryption-algorithm")
@@ -68,7 +68,7 @@ object Hdfs {
       conf.set(awsServerSideEncryptionAlgo, config.getString(awsServerSideEncryptionAlgo))
     } // end s3 support
 
-    conf.setInt("io.file.buffer.size", 4096)
+    conf.setInt("io.file.buffer.size", ioBufferSize)
 
     conf
   }
