@@ -22,6 +22,7 @@ javacOptions in ThisBuild ++=
 val slickV = "3.2.1"
 val slickPgV = "0.15.2"
 val hadoopV = "2.8.1"
+val commonsIOV = "2.5"
 
 val commonDependencies = Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
@@ -43,13 +44,15 @@ lazy val database =
     .settings(libraryDependencies ++= commonDependencies)
     .settings(
       libraryDependencies ++=
-        Seq("org.reactivemongo" 	        %% "reactivemongo" 	      % "0.12.5",
-	          "org.postgresql"       	       % "postgresql"           % "42.1.1",
-            "com.typesafe.slick"  	      %% "slick"                % slickV,
-            "com.typesafe.slick"  	      %% "slick-hikaricp"       % slickV,
-            "com.github.tminglei" 	      %% "slick-pg"             % slickPgV,
-            "com.github.tminglei" 	      %% "slick-pg_spray-json"  % slickPgV),
+        Seq("org.reactivemongo" %% "reactivemongo" % "0.12.5",
+	          "org.postgresql" % "postgresql" % "42.1.1",
+            "com.typesafe.slick" %% "slick" % slickV,
+            "com.typesafe.slick" %% "slick-hikaricp" % slickV,
+            "com.github.tminglei" %% "slick-pg" % slickPgV,
+            "com.github.tminglei" %% "slick-pg_spray-json" % slickPgV),
+      fork in Test := true,
       publishArtifact in(Compile, packageSrc) := false)
+
 
 
 lazy val hdfs =
@@ -61,5 +64,16 @@ lazy val hdfs =
         "com.google.cloud.bigdataoss" % "gcs-connector" % "1.6.1-hadoop2",
         "org.apache.hadoop" % "hadoop-client" % hadoopV,
         "commons-codec" % "commons-codec" % "1.10"),
+      fork in Test := true,
+      publishArtifact in(Compile, packageSrc) := false)
+
+
+lazy val csv =
+  Project(id = "core-csv", base = file("csv"))
+    .settings(libraryDependencies ++= commonDependencies)
+    .settings(
+      libraryDependencies ++= Seq(
+        "com.univocity" % "univocity-parsers" % "2.4.1",
+        "commons-io" % "commons-io" % commonsIOV),
       fork in Test := true,
       publishArtifact in(Compile, packageSrc) := false)

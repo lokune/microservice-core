@@ -9,8 +9,7 @@ import com.okune.database.CorePgDriver.DDL
 
 object Migrations {
 
-  /**
-    * Postgres database migration class
+  /** Postgres database migration class
     *
     * This comes in handy when you need services to create their own database and tables on startup in order to reduce manual setup
     *
@@ -29,17 +28,13 @@ object Migrations {
     val defaultDbUri = s"jdbc:postgresql://$host:$port/postgres"
     val dbUri = s"jdbc:postgresql://$host:$port/$dbName"
 
-    /**
-      * Creates database and tables
-      */
+    /** Creates database and tables  */
     def createAll(): Unit = {
       createDatabase()
       createTables()
     }
 
-    /**
-      * Creates a database if it does not exist
-      */
+    /** Creates a database if it does not exist */
     def createDatabase(): Unit = {
       using(db(defaultDbUri)) { db =>
         val checkDbResult = Await.result(db.run(sql"SELECT 1 FROM pg_database WHERE datname = $dbName".as[Int]), Duration.Inf)
@@ -49,9 +44,7 @@ object Migrations {
       }
     }
 
-    /**
-      * Force drops a database if it exists
-      */
+    /** Force drops a database if it exists */
     def dropDatabase(): Unit = {
       using(db(defaultDbUri)) { db =>
         val checkDbResult = Await.result(db.run(sql"SELECT 1 FROM pg_database WHERE datname = $dbName".as[Int]), Duration.Inf)
@@ -62,27 +55,21 @@ object Migrations {
       }
     }
 
-    /**
-      * Creates tables given slick table schema
-      */
+    /** Creates tables given slick table schema */
     def createTables(): Unit = {
       using(db(dbUri)) { db =>
         schema.foreach(s => db.run(DBIO.seq(s.create)))
       }
     }
 
-    /**
-      * Runs sql migrations
-      */
+    /** Runs sql migrations */
     def sqlMigration(): Unit = {
       using(db(dbUri)) { db =>
         sqlStmts.foreach(stmt => db.run(sqlu"$stmt"))
       }
     }
 
-    /**
-      * A convenient function for safely closing a resource after use
-      */
+    /** A convenient function for safely closing a resource after use */
     private def using[A <: {def close() : Unit}, B](resource: A)(f: A => B): B =
       try {
         f(resource)
@@ -90,9 +77,7 @@ object Migrations {
         if (resource != null) resource.close()
       }
 
-    /**
-      * Creates `Database` object for running `DBIOAction`
-      */
+    /** Creates `Database` object for running `DBIOAction` */
     private def db(uri: String): Database = Database.forURL(uri, user = user, password = password, driver = driver)
   }
 }

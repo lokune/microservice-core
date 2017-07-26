@@ -6,9 +6,7 @@ import slick.basic.Capability
 
 import scala.concurrent.Future
 
-/**
-  * Slick extensions for PostgreSQL, to support a series of pg data types and related operators/functions.
-  */
+/** Slick extensions for PostgreSQL, to support a series of pg data types and related operators/functions. */
 trait CorePgDriver extends ExPostgresProfile
   with PgArraySupport
   with PgDate2Support
@@ -50,8 +48,7 @@ trait PostgresDb {
   implicit lazy val db = Database.forConfig(configPath)
 }
 
-/**
-  * A generic `Data Access Object` for `Postgres DB`
+/** A generic `Data Access Object` for `Postgres DB`
   *
   * Get some `CRUD` on postgres tables for free
   */

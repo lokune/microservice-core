@@ -11,8 +11,7 @@ object Hdfs {
   import java.net.URI
   import org.apache.hadoop.fs._
 
-  /**
-    * Create a Hadoop `Configuration` value for use in executing `Hdfs` operations.
+  /** Create a Hadoop `Configuration` value for use in executing `Hdfs` operations.
     *
     * Default configuration loading rules are explained at https://hadoop.apache.org/docs/r2.7.1/api/org/apache/hadoop/conf/Configuration.html.
     *
@@ -40,6 +39,8 @@ object Hdfs {
     * https://aws.amazon.com/cli/
     * [2] Add s3 server-side encryption
     * https://issues.apache.org/jira/browse/HADOOP-10568
+    *
+    * @return the hadoop `Configuration`
     */
   def configuration(root: Config = ConfigFactory.load(), ioBufferSize: Int = 4096): Configuration = {
     val config = root.getConfig("com.okune.hdfs")

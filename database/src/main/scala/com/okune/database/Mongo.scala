@@ -33,8 +33,7 @@ trait MongoDb {
   } yield db
 }
 
-/**
-  * A generic `Data Access Object` for `Mongo DB`
+/** A generic `Data Access Object` for `Mongo DB`
   *
   * Get Basic `CRUD` on mongo collections for free
   */
