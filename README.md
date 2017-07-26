@@ -43,6 +43,6 @@ The following are the modules you can use in your service:
 * `core-csv`
 
     * This module is for parsing csv files from the ground up. It's powered by [Univocity Parsers, the best & fastest CSV parser](https://github.com/uniVocity/univocity-parsers)
-    * This modules handles the BOM character and special character escaping. These issues are really annoying when dealing with CSV files.
+    * This module handles the BOM character and special character escaping. These issues are really annoying when dealing with CSV files.
 
 N/B: To get a deeper understanding of how any module works, look at it's tests.
