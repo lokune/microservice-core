@@ -38,9 +38,9 @@ object CSVReader {
   private def settings(delimiter: Option[Char] = None,
                        lineSeparator: Option[String] = None): CsvParserSettings = {
     val settings = new CsvParserSettings()
-    delimiter.fold(settings.setDelimiterDetectionEnabled(true))( // detection not enabled by default
+    delimiter.fold(settings.setDelimiterDetectionEnabled(true))(
       d => settings.getFormat.setDelimiter(d))
-    lineSeparator.fold(settings.setLineSeparatorDetectionEnabled(true))( // detection not enabled by default
+    lineSeparator.fold(settings.setLineSeparatorDetectionEnabled(true))(
       ls => settings.getFormat.setLineSeparator(ls))
     settings.setEmptyValue("") // default is null
     settings.setNullValue("") // default is null
