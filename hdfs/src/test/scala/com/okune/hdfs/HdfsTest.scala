@@ -1,9 +1,15 @@
 package com.okune.hdfs
 
+import com.typesafe.config.{Config, ConfigFactory}
 import org.apache.hadoop.io.IOUtils
 import org.scalatest.{Matchers, WordSpec}
 
 import scala.util.{Failure, Success, Try}
+
+object Resources {
+  val rootConfig: Config = ConfigFactory.load()
+  val hdfsConfig: Config = rootConfig.getConfig("com.okune.hdfs")
+}
 
 class HdfsTest extends WordSpec with Matchers {
 
@@ -12,19 +18,18 @@ class HdfsTest extends WordSpec with Matchers {
   import org.apache.hadoop.conf.Configuration
 
 
-  /**
-    * We are going to write/read to/from s3 bucket. With
-    */
+  /** We are going to write/read to/from s3 bucket. */
+
   "The script " should {
     "be able to write/read to/fro S3" in {
       val tmp = {
         val t = java.nio.file.Files.createTempFile("HdfsTest", null).toFile
         Some(new PrintWriter(t)).foreach { p => p.write("hello world\n"); p.close }
-        t.deleteOnExit
+        t.deleteOnExit()
         t
       }
 
-      val bucket: String = "dev-tests-lokune"
+      val bucket: String = Resources.hdfsConfig.getString("fs.s3a.bucket")
       val hdfsUri: URI = new URI(s"s3a://${bucket}/" + tmp.getName)
       write(tmp.toURI, hdfsUri, Hdfs.config()) match {
         case Success(_) =>

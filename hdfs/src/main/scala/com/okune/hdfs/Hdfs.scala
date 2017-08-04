@@ -82,8 +82,8 @@ object Hdfs {
       val t = java.nio.file.Files.createTempFile("GC_KeyFile", null).toFile
       val bos = new BufferedOutputStream(new FileOutputStream(t))
       bos.write(fileContents)
-      bos.close
-      t.deleteOnExit
+      bos.close()
+      t.deleteOnExit()
       t
     }
 
