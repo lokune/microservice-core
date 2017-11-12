@@ -2,17 +2,18 @@ package com.okune.database
 
 import java.util.concurrent.Executors
 
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.concurrent.duration.Duration
-import org.scalatest.{BeforeAndAfterAll, FunSuite, Matchers, WordSpec}
-import reactivemongo.api.indexes.Index
-import reactivemongo.api.indexes.IndexType
+import com.okune.database
+import com.okune.database.CorePgDriver.api._
+import com.typesafe.config.{Config, ConfigFactory}
+import org.scalatest.{BeforeAndAfterAll, FlatSpec, Matchers, WordSpec}
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson.{BSONDocument, BSONDocumentReader, BSONDocumentWriter, BSONObjectID, Macros}
 import slick.lifted.ProvenShape.proveShapeOf
 import slick.lifted.Tag
-import com.okune.database.CorePgDriver.api._
-import com.typesafe.config.ConfigFactory
-import reactivemongo.api.collections.bson.BSONCollection
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, ExecutionContext, Future}
 
 class PgTest extends WordSpec with Matchers with BeforeAndAfterAll {
 
@@ -26,7 +27,7 @@ class PgTest extends WordSpec with Matchers with BeforeAndAfterAll {
     Postgres.Migrations.destroy()
   }
 
-  "Script" should {
+  "The script" should {
     "save and/or retrieve data from postgres db" in {
       import Postgres._
 
@@ -50,7 +51,7 @@ class PgTest extends WordSpec with Matchers with BeforeAndAfterAll {
 }
 
 class MongoTest extends WordSpec with Matchers {
-  "Script" should {
+  "The script" should {
     "save and/or retrieve data from mongo" in {
       import Mongo._
 
@@ -69,7 +70,7 @@ class MongoTest extends WordSpec with Matchers {
 object Mongo extends MongoDb {
   implicit val ec: ExecutionContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(2))
 
-  def config = ConfigFactory.load().getConfig("com.okune.database.mongo")
+  def config: Config = ConfigFactory.load().getConfig("com.okune.database.mongo")
 
   case class Person(_id: BSONObjectID, name: String, Age: Int)
 
@@ -118,8 +119,8 @@ object Postgres extends PostgresDb {
    * This shows how we can use microservice-core migrations api
    */
   object Migrations {
-    val config = ConfigFactory.load().getConfig(s"${configPath}")
-    val schema = TableQuery[UserTable].schema
+    val config: Config = ConfigFactory.load().getConfig(s"$configPath")
+    val schema: database.CorePgDriver.SchemaDescription = TableQuery[UserTable].schema
     val migrationsRunner = new com.okune.database.Migrations.Postgres(config, Some(schema))
 
     def init(): Unit = {

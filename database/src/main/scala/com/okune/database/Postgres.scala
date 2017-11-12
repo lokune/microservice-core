@@ -3,6 +3,7 @@ package com.okune.database
 import com.github.tminglei.slickpg._
 import slick.jdbc.JdbcBackend.Database
 import slick.basic.Capability
+import slick.jdbc.JdbcBackend
 
 import scala.concurrent.Future
 
@@ -23,7 +24,7 @@ trait CorePgDriver extends ExPostgresProfile
   override protected def computeCapabilities: Set[Capability] =
     super.computeCapabilities + slick.jdbc.JdbcCapabilities.insertOrUpdate
 
-  override val api = CorePgAPI
+  override val api: CorePgAPI.type = CorePgAPI
 
   object CorePgAPI extends API
     with ArrayImplicits
@@ -35,7 +36,7 @@ trait CorePgDriver extends ExPostgresProfile
     with HStoreImplicits
     with SearchImplicits
     with SearchAssistants {
-    implicit val strListTypeMapper = new SimpleArrayJdbcType[String]("text").to(_.toList)
+    implicit val strListTypeMapper: DriverJdbcType[List[String]] = new SimpleArrayJdbcType[String]("text").to(_.toList)
   }
 
 }
@@ -45,7 +46,7 @@ object CorePgDriver extends CorePgDriver
 trait PostgresDb {
   def configPath: String
 
-  implicit lazy val db = Database.forConfig(configPath)
+  implicit lazy val db: JdbcBackend.Database = Database.forConfig(configPath)
 }
 
 /** A generic `Data Access Object` for `Postgres DB`

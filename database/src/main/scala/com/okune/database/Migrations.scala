@@ -13,17 +13,17 @@ object Migrations {
     *
     * This comes in handy when you need services to create their own database and tables on startup in order to reduce manual setup
     *
-    * @param config   typesafe `Config` object for postgres
-    * @param schema   a Seq of slick `DDL`. Example `val schema = Some(myTableQuery1.schema ++ myTableQuery2.schema)`
+    * @param config   typesafe [[Config]] object for postgres
+    * @param schema   a Seq of slick [[DDL]]. Example `val schema = Some(myTableQuery1.schema ++ myTableQuery2.schema)`
     * @param sqlStmts a sequence of raw sql statements
     */
   class Postgres(config: Config, schema: Option[DDL] = None, sqlStmts: Seq[String] = Nil) {
-    val driver = "org.postgresql.Driver"
-    val host = config.getString("properties.serverName")
-    val port = config.getInt("properties.portNumber")
-    val user = config.getString("properties.user")
-    val password = config.getString("properties.password")
-    val dbName = config.getString("properties.databaseName")
+    val driver: String = "org.postgresql.Driver"
+    val host: String = config.getString("properties.serverName")
+    val port: Int = config.getInt("properties.portNumber")
+    val user: String = config.getString("properties.user")
+    val password: String = config.getString("properties.password")
+    val dbName: String = config.getString("properties.databaseName")
 
     val defaultDbUri = s"jdbc:postgresql://$host:$port/postgres"
     val dbUri = s"jdbc:postgresql://$host:$port/$dbName"

@@ -20,17 +20,17 @@ class HdfsTest extends WordSpec with Matchers {
 
   /** We are going to write/read to/from s3 bucket. */
 
-  "The script " should {
+  "The script" should {
     "be able to write/read to/fro S3" in {
       val tmp = {
         val t = java.nio.file.Files.createTempFile("HdfsTest", null).toFile
-        Some(new PrintWriter(t)).foreach { p => p.write("hello world\n"); p.close }
+        Option(new PrintWriter(t)).foreach { p => p.write("hello world\n"); p.close() }
         t.deleteOnExit()
         t
       }
 
       val bucket: String = Resources.hdfsConfig.getString("fs.s3a.bucket")
-      val hdfsUri: URI = new URI(s"s3a://${bucket}/" + tmp.getName)
+      val hdfsUri: URI = new URI(s"s3a://$bucket/" + tmp.getName)
       write(tmp.toURI, hdfsUri, Hdfs.config()) match {
         case Success(_) =>
           println("File written to destination.")
@@ -47,7 +47,7 @@ class HdfsTest extends WordSpec with Matchers {
     }
   }
 
-  def read(uri: URI) = {
+  def read(uri: URI): List[String] = {
     val is = Hdfs.read(uri)
     val lines = scala.io.Source.fromInputStream(is).getLines
     lines.toList
@@ -59,6 +59,6 @@ class HdfsTest extends WordSpec with Matchers {
     Try(IOUtils.copyBytes(is, os, config, true))
   }
 
-  def delete(uri: URI) =
+  def delete(uri: URI): Boolean =
     Hdfs.fileSystem(uri) delete(Hdfs.path(uri), true)
 }

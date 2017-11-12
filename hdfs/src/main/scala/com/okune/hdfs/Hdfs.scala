@@ -40,7 +40,7 @@ object Hdfs {
     * [2] Add s3 server-side encryption
     * https://issues.apache.org/jira/browse/HADOOP-10568
     *
-    * @return the hadoop `Configuration`
+    * @return the hadoop [[Configuration]]
     */
   def configuration(root: Config = ConfigFactory.load(), ioBufferSize: Int = 4096): Configuration = {
     val config = root.getConfig("com.okune.hdfs")
